@@ -1,4 +1,4 @@
-gnorar archivos de sistema
+# Ignorar archivos de sistema
 .DS_Store
 Thumbs.db
 
