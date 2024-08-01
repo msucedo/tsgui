@@ -1,9 +1,29 @@
 import os
 import shutil
+import psutil
+import subprocess
 
 input_dir = r"C:\Users\mario\Documents\switch data\JKSV"
 destiny_dir = r"C:\Users\mario\Desktop\JKSV"
 
+# obtener las particiones del disco
+particiones = psutil.disk_partitions()
+
+# listar las particiones del disco
+partition_matches = []
+for particion in particiones:
+    # validate if it is a removable partition
+    if "removable" in particion.opts:
+        partition_matches.append(particion.mountpoint)
+        #print(folder_list)
+        #for item in folder_list.stdout:
+            #if "JKSV" == item:
+                #print("got it", particion.mountpoint)
+
+# looking for JKSV folder within removable partitions
+for partition in partition_matches:
+    folder_list = subprocess.run([f'dir {partition}'], capture_output=True, text=True)
+print(folder_list.stdout)
 
 # prompt user for origin folder
 chosen_origin_folder = input("enter a folder's route:")
