@@ -1,0 +1,40 @@
+gnorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración de IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorar carpetas de compilación
+build/
+dist/
+out/
+
+# Ignorar dependencias de Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar dependencias de Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar archivos temporales
+*.tmp
+*.swp
+
+# Ignorar archivos de respaldo
+*~
+*.un~
+*.md~
+
+# Ignorar otros archivos
+JKSV++.md
