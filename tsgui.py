@@ -6,36 +6,31 @@ import subprocess
 input_dir = r"C:\Users\mario\Documents\switch data\JKSV"
 destiny_dir = r"C:\Users\mario\Desktop\JKSV"
 
-# obtener las particiones del disco
-particiones = psutil.disk_partitions()
+# obtain disk partitions
+user_partitions = psutil.disk_partitions()
 
-# listar las particiones del disco
-partition_matches = []
-for particion in particiones:
+# filter all partitions to removable and FAT32/exFAT only
+user_partitions_matches = []
+for partition in user_partitions:
     # validate if it is a removable partition
-    if "removable" in particion.opts:
-        partition_matches.append(particion.mountpoint)
-        #print(folder_list)
-        #for item in folder_list.stdout:
-            #if "JKSV" == item:
-                #print("got it", particion.mountpoint)
-
-# looking for JKSV folder within removable partitions
-for partition in partition_matches:
-    folder_list = subprocess.run([f'dir {partition}'], capture_output=True, text=True)
-print(folder_list.stdout)
-
-# prompt user for origin folder
-chosen_origin_folder = input("enter a folder's route:")
-input_dir = input_dir if chosen_origin_folder == "" else chosen_origin_folder
-print("selected route: ", input_dir)
+    if "removable" in partition.opts:
+        # validate partition's file system
+        if "FAT32" in partition.fstype:
+            user_partitions_matches.append(partition.mountpoint)
+        elif "exFAT" in partition.fstype:
+            user_partitions_matches.append(partition.mountpoint)
+# prompt user to select origin SD
+for partition in user_partitions_matches:
+    print(partition)
+chosen_origin_source = input("enter partition letter:")
 # get folders from JKSV
-folders = os.listdir(input_dir)
+folders = os.listdir(f"{chosen_origin_source}:\\JKSV")
 # print total folders(games)
 print("Total games:", len(folders))
-# print folders(games)
+# enumerate and print folders(games)
 for i,folder in enumerate(folders):
     print(i+1,folder)
+    # si es ls jksv marcarla par luego imprmir su contenido automaticamente
 # get selected folder(game)
 selected_folder = input("Choose a game:")
 # remove extra number to match folder's index
@@ -44,13 +39,17 @@ selected_game_name = folders[selected_folder]
 print(folders[selected_folder])
 action = input("c copy or d delete?:")
 if action == "c":
+    # get destiny's url path
     selected_destiny = input("select destiny folder:")
     destiny_dir = destiny_dir if selected_destiny == "" else selected_destiny
     print("seleted destiny route: ", destiny_dir)
     confirm_action = input("c confirm or ca cancel:")
     if confirm_action == "c":
-        dir_origin = input_dir + "\\" + selected_game_name
+        # build final origin's url path
+        dir_origin = chosen_origin_source + ":\\JKSV\\" + selected_game_name
+        # build final destiny's url path
         dir_destiny = destiny_dir + "\\" + selected_game_name
+        # copy folder
         shutil.copytree(dir_origin, dir_destiny)
         print("game save data copied succesfully!")
     else:
