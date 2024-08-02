@@ -1,7 +1,8 @@
 import os
 import shutil
 import psutil
-import subprocess
+import tkinter as tk
+from tkinter import messagebox
 
 input_dir = r"C:\Users\mario\Documents\switch data\JKSV"
 destiny_dir = r"C:\Users\mario\Desktop\JKSV"
@@ -19,6 +20,7 @@ for partition in user_partitions:
             user_partitions_matches.append(partition.mountpoint)
         elif "exFAT" in partition.fstype:
             user_partitions_matches.append(partition.mountpoint)
+"""
 # prompt user to select origin SD
 for partition in user_partitions_matches:
     print(partition)
@@ -58,3 +60,22 @@ elif action == "d":
     confirm_action = input("c confirm or ca cancel:")
     print("folder deleted")
     print("thank you")
+"""
+window = tk.Tk()
+window.title("Transfer save games data")
+window.geometry("400x300")
+
+# choose partition label
+etiqueta = tk.Label(window, text="Particiones disponibles:")
+etiqueta.pack(pady=10)
+
+# Crear un Listbox
+listbox = tk.Listbox(window, selectmode=tk.SINGLE)
+listbox.pack(pady=10, fill=tk.BOTH, expand=True)
+
+# Obtener la lista de discos duros y llenar el Listbox
+for partition in user_partitions_matches:
+    listbox.insert(tk.END, partition)
+
+# Ejecutar el bucle principal
+window.mainloop()
